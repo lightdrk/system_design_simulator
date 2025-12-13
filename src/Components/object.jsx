@@ -12,26 +12,29 @@ export default function ObjectComponent({title, image}) {
 
     const handleDown = (e)=>{
         setIsDragging(true);
-        console.log(e.clientX - ourComp.current.offsetLeft)
         setXOffset(e.clientX - ourComp.current.offsetLeft)
         setYOffset(e.clientY - ourComp.current.offsetTop)
     }
-    const handleMovment = (e)=>{
-        if (!isDragging) return
-        console.log("Moving ..")
-        console.log(e.clientX-xOffset);
-        setTop(e.clientY-yOffset);
-        setLeft(e.clientX-xOffset);
-    }
+
     const handleRightClick = (e) => {
         console.log('Right Click');
     }
+    useEffect(()=>{
+        const handleMovment = (e)=>{
+            if (!isDragging) return
+            setTop(e.clientY-yOffset);
+            setLeft(e.clientX-xOffset);
+        }
+        document.addEventListener('mousemove', handleMovment);
+        return ()=>{
+            document.removeEventListener('mousemove', handleMovment);
+        }
+    },[xOffset,yOffset, top, left])
 
     return (
         <button 
             ref={ourComp} 
             onMouseDown={handleDown} 
-            onMouseMove={handleMovment} 
             onMouseUp={()=>{setIsDragging(false)}}
             onContextMenu={handleRightClick}
             className={`absolute bg-transparent w-20 h-20 cursor-pointer`} 

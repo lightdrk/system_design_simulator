@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 
 
-export default function ObjectComponent({title, image}) {
+export default function ObjectComponent({title, image, setSide}) {
     const [data,setData] = useState();
     const ourComp = useRef();
     const [left, setLeft] = useState('10');
     const [top, setTop] = useState('10');
+    const [config, setConfig] = useState(false);
+    const [rightClick,setRightClick] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [xOffset, setXOffset] = useState('0');
     const [yOffset, setYOffset] = useState('0');
@@ -15,10 +17,19 @@ export default function ObjectComponent({title, image}) {
         setXOffset(e.clientX - ourComp.current.offsetLeft)
         setYOffset(e.clientY - ourComp.current.offsetTop)
     }
+    const handleConfig = () => {
+        setConfig(!config);
+    }
 
     const handleRightClick = (e) => {
-        console.log('Right Click');
+        e.preventDefault();
+        setRightClick(!rightClick)
     }
+    useEffect(()=>{
+        setSide(config)
+
+
+    },[config])
     useEffect(()=>{
         const handleMovment = (e)=>{
             if (!isDragging) return
@@ -32,6 +43,7 @@ export default function ObjectComponent({title, image}) {
     },[xOffset,yOffset, top, left])
 
     return (
+        <>
         <button 
             ref={ourComp} 
             onMouseDown={handleDown} 
@@ -42,6 +54,19 @@ export default function ObjectComponent({title, image}) {
         >
             <img className="" src={image} draggable={false}></img>
         </button>
+        <div
+            className='absolute bg-black'
+            style={{ top: `${top}px`, left: `${left}px` }}
+        >
+        { rightClick &&
+        <table className='text-white'>
+            <tr>
+                <th onClick={handleConfig}>Configure</th>
+            </tr>
+        </table>
+        }
+        </div>
+        </>
     );
 
 }

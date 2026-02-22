@@ -8,6 +8,8 @@ import './App.css'
 
 function App() {
     const [nodes,setNodes] = useState(false);
+    const [tools,setTools] = useState(false);
+    const [side,setSide] = useState(false);
     const [nodeSelector,setNodeSelector] = useState();
     const [addObj, setAddObj] = useState();
 
@@ -19,6 +21,9 @@ function App() {
     const handleNodes = () => {
         setNodes(!nodes)
     }
+    const handleTools = () => {
+        setTools(!tools)
+    }
     const handleNodeSelectionClick = (e) => {
         setNodes(false);
         setNodeSelector('redis');
@@ -26,11 +31,22 @@ function App() {
         setComponents(prev => [...prev,'redis'])
         setNodeSelector('')
     }
+    const handleToolsSelectionClick = (e) => {
+        setTools(false);
+    }
 
-    const ObjectOnScreen = {};
     return (
         <>
+        <div className=''>
+        <div>
             <div className='p-2'>
+                <button
+                    className="cursor-pointer border-1 rounded-md p-1.5 hover:bg-sky-700 bg-sky-500 text-white "
+                    onClick={handleTools}
+                >
+                    <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon>
+                    Tools
+                </button>
                 <button
                     className="cursor-pointer border-1 rounded-md p-1.5 hover:bg-sky-700 bg-sky-500 text-white "
                     onClick={handleNodes}
@@ -46,23 +62,31 @@ function App() {
 
                     )
                 }
+                {
+                    tools && (
+                    <div>
+                            <button onClick={handleToolsSelectionClick}>connection</button>
+                    </div>
+
+                    )
+                }
             </div>
             <div className='w-screen h-screen bg-white flex flex-col justify-center align-center border-1 border-dotted'>
                 {
 
                     components.map( c => (
-                        <ObjectComponent key={c} title="REDIS" image="https://icon.icepanel.io/Technology/svg/Redis.svg"/>
+                        <ObjectComponent key={c} title="REDIS" image="https://icon.icepanel.io/Technology/svg/Redis.svg" setSide={setSide}/>
                     ))
 
 
-                }
-                {
-
-                    connection.map(c =>(
-                        <ObjectConnectionString coordinate={{a: {x:100, y: 500}, b: {x: 400, y: 220}}}/>
-                    ))
                 }
             </div>
+            <ObjectConnectionString coordinate={{a: {x:60,y:220}, b: {x:220,y:60}}}/>
+        </div>
+
+        <div>
+        </div>
+        </div>
         </>
     )
 }
